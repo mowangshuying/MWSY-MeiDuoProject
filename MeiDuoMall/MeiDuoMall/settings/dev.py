@@ -54,26 +54,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'MeiDuoMall.urls'
 
 TEMPLATES = [
-    # {
-    #     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    #     'DIRS': [],
-    #     'APP_DIRS': True,
-    #     'OPTIONS': {
-    #         'context_processors': [
-    #             'django.template.context_processors.debug',
-    #             'django.template.context_processors.request',
-    #             'django.contrib.auth.context_processors.auth',
-    #             'django.contrib.messages.context_processors.messages',
-    #         ],
-    #     },
-    # },
-
-    # pip install jinja2
     {
-
-        'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        # 配置模板文件加载路径
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,10 +65,27 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            # 补充jinja2模板引擎环境
-            'evironment':'MeiDuoMall.utils.jinja2_env.Jinja2Enviroment'
         },
     },
+
+    # pip install jinja2
+    # {
+    #
+    #     'BACKEND': 'django.template.backends.jinja2.Jinja2',
+    #     # 配置模板文件加载路径
+    #     'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    #     'APP_DIRS': True,
+    #     'OPTIONS': {
+    #         'context_processors': [
+    #             'django.template.context_processors.debug',
+    #             'django.template.context_processors.request',
+    #             'django.contrib.auth.context_processors.auth',
+    #             'django.contrib.messages.context_processors.messages',
+    #         ],
+    #         # 补充jinja2模板引擎环境
+    #         'evironment':'MeiDuoMall.utils.jinja2_env.Jinja2Enviroment'
+    #     },
+    # },
 ]
 
 WSGI_APPLICATION = 'MeiDuoMall.wsgi.application'
@@ -104,43 +104,43 @@ DATABASES = {
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': '123456',
-        'NAME': 'meiduomall',
+        'NAME': 'test',
     }
 }
 
 # 配置redis数据库
-# https://django-redis-chs.readthedocs.io/zh_CN/latest/
-# CACHES = {
-#     # 默认
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/0",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         }
-#     },
-#     # session
-#     "session": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/1",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         }
-#     },
-#
-#     # 验证码
-#     "verify_code": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/2",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         }
-#     },
-# }
-#
-# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-#
-# SESSION_CACHE_ALIAS = "session"
+#https://django-redis-chs.readthedocs.io/zh_CN/latest/
+CACHES = {
+    # 默认
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    # session
+    "session": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+
+    # 验证码
+    "verify_code": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+SESSION_CACHE_ALIAS = "session"
 
 LOGGING = {
     'version': 1,
