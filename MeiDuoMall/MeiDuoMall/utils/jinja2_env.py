@@ -13,7 +13,7 @@ def Jinja2Enviroment(**options):
         # 获取静态文件前缀
         'static': staticfiles_storage.url,
         # 反向解析
-        'url': reverse
+        'url': reverse,
     })
-
+    
     return env
