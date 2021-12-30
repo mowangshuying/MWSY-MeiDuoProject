@@ -82,6 +82,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            # 补充jinja2模板引擎环境
+            'evironment':'MeiDuoMall.utils.jinja2_env.Jinja2Enviroment'
         },
     },
 ]
