@@ -54,9 +54,26 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'MeiDuoMall.urls'
 
 TEMPLATES = [
+    # {
+    #     'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    #     'DIRS': [],
+    #     'APP_DIRS': True,
+    #     'OPTIONS': {
+    #         'context_processors': [
+    #             'django.template.context_processors.debug',
+    #             'django.template.context_processors.request',
+    #             'django.contrib.auth.context_processors.auth',
+    #             'django.contrib.messages.context_processors.messages',
+    #         ],
+    #     },
+    # },
+
+    # pip install jinja2
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        # 配置模板文件加载路径
+        'DIRS': [os.path.jon(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
