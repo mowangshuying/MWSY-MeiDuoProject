@@ -1,3 +1,5 @@
+# 开发环境配置文件
+
 """
 Django settings for MeiDuoMall project.
 
