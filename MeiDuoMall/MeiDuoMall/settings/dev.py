@@ -73,7 +73,7 @@ TEMPLATES = [
 
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
         # 配置模板文件加载路径
-        'DIRS': [os.path.jon(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,8 +96,15 @@ WSGI_APPLICATION = 'MeiDuoMall.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',
+        'PORT': 3306,
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'NAME': 'meiduomall',
     }
 }
 
