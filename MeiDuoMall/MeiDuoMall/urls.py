@@ -1,6 +1,6 @@
-"""MeiDuoMall URL Configuration
+"""美多商城URL的配置信息
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+“urlpatterns”列表将URL路由到视图。有关更多信息，请参阅:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
 Examples:
 Function views
@@ -13,9 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+
+from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    
+    #users
+    url(r'',include('users.urls',namespace='users'))
 ]
