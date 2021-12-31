@@ -1,10 +1,13 @@
 # 开发环境配置文件
 
 import os
+import sys
 
 # 像这样在项目内部构建路径: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 打印导包路径
+print(sys.path)
 
 # 快速启动开发设置-不适合生产
 # 请看 https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -26,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'MeiDuoMall.apps.users',
 ]
 
 # 中间件配置
