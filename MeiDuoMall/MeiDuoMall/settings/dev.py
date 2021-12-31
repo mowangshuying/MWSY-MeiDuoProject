@@ -6,8 +6,12 @@ import sys
 # 像这样在项目内部构建路径: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 追加导包路径
+sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
+
 # 打印导包路径
-print(sys.path)
+print("sys.path = ", sys.path)
+
 
 # 快速启动开发设置-不适合生产
 # 请看 https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
