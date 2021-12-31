@@ -7,16 +7,15 @@ if __name__ == "__main__":
     try:
         from django.core.management import execute_from_command_line
     except ImportError:
-        # The above import may fail for some other reason. Ensure that the
-        # issue is really that Django is missing to avoid masking other
-        # exceptions on Python 2.
+        # 上述导入可能由于其他原因而失败。确保
+        # 问题是Django真的丢失了，以避免掩盖其他人
+        # Python 2上的异常。
         try:
             import django
         except ImportError:
             raise ImportError(
-                "Couldn't import Django. Are you sure it's installed and "
-                "available on your PYTHONPATH environment variable? Did you "
-                "forget to activate a virtual environment?"
+                # 无法导入Django。您确定它已安装并且 在Python PATH环境变量上可用吗？
+                # 忘记激活虚拟环境？
             )
         raise
     execute_from_command_line(sys.argv)
