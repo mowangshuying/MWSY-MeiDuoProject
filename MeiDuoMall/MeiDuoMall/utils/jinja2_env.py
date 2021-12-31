@@ -1,7 +1,6 @@
-from jinja2 import Environment
 from django.urls import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
-
+from jinja2 import Environment
 
 def Jinja2Enviroment(**options):
     # jinja2 环境
@@ -15,5 +14,4 @@ def Jinja2Enviroment(**options):
         # 反向解析
         'url': reverse,
     })
-    
     return env

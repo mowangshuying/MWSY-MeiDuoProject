@@ -69,23 +69,22 @@ TEMPLATES = [
     },
 
     # pip install jinja2
-    # {
-    #
-    #     'BACKEND': 'django.template.backends.jinja2.Jinja2',
-    #     # 配置模板文件加载路径
-    #     'DIRS': [os.path.join(BASE_DIR, 'templates')],
-    #     'APP_DIRS': True,
-    #     'OPTIONS': {
-    #         'context_processors': [
-    #             'django.template.context_processors.debug',
-    #             'django.template.context_processors.request',
-    #             'django.contrib.auth.context_processors.auth',
-    #             'django.contrib.messages.context_processors.messages',
-    #         ],
-    #         # 补充jinja2模板引擎环境
-    #         'evironment':'MeiDuoMall.utils.jinja2_env.Jinja2Enviroment'
-    #     },
-    # },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        # 配置模板文件加载路径
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            # 补充jinja2模板引擎环境
+            'environment': 'MeiDuoMall.utils.jinja2_env.Jinja2Enviroment'
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'MeiDuoMall.wsgi.application'
