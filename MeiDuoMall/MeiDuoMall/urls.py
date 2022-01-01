@@ -19,7 +19,8 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    
     #users
-    url(r'',include('users.urls',namespace='users'))
+    # url(r'',include('users.urls',namesapce='users')是错误的
+    # 下面这个才是正确的
+    url(r'',include(('users.urls','users'),namespace='users'))
 ]

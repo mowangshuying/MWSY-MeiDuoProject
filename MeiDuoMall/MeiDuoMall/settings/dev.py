@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
 
 # 打印导包路径
-print("sys.path = ", sys.path)
+# print("sys.path = ", sys.path)
 
 
 # 快速启动开发设置-不适合生产
@@ -33,8 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'MeiDuoMall.apps.users',
+    'users',
 ]
 
 # 中间件配置
@@ -99,7 +98,7 @@ DATABASES = {
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': '123456',
-        'NAME': 'test',
+        'NAME': 'meiduomall',
     }
 }
 
@@ -121,21 +120,29 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
-
-    # 验证码
-    "verify_code": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/2",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    },
 }
 
 # 会话的数据库配置
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "session"
 
+# Password validation
+# https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # 是否禁用已经存在的日志器
@@ -177,22 +184,6 @@ LOGGING = {
     }
 }
 
-# 密码验证 https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
 
 # 静态文件配置 (CSS, JavaScript, Images): https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATIC_URL = '/static/'
@@ -205,3 +196,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+# 解决w042错误
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+# 指定自定义的用户模型类：值的语法 ==> '子应用.用户模型类'
+AUTH_USER_MODEL = 'users.User'
