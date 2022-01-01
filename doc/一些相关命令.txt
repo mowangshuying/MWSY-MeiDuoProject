@@ -1,0 +1,5 @@
+python django-admin startproject MeiDuoProject
+python manage.py runserver
+python manage.py startapp users
+python manage.py makemigrations # 创建迁移文件
+python manage.py migrate # 执行迁移命令
