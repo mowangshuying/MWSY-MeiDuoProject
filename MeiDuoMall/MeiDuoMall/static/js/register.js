@@ -69,8 +69,8 @@ let vm = new Vue({
 
             // 在校验之后，注册数据中，只要有错误，就禁用掉表单的提交事件
             if ( this.error_name == true || this.error_password == true ||
-                 this.error_password2 == true || this.mobile == true || 
-                 this.allow == true) 
+                 this.error_password2 == true || this.error_mobile == true || 
+                 this.error_allow == true) 
            {
                 // 禁用掉表单的提交事件
                 window.event.returnValue = false;
