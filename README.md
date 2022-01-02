@@ -68,7 +68,7 @@ python manage.py migrate
 
 ##### 2021/12/28-2022/1/1：
 
-##### 2021/1/1: 
+##### 2022/1/1: 
 
 1、mysql8.x的安装包放在doc/soft文件夹下
 
@@ -77,6 +77,24 @@ python manage.py migrate
 2、安装为mysql8.x之后，执行python manage.py migrate没有出错，执行产生的效果图如下：
 
 ![image-20220101141845578](./doc/img/image-20220101141845578.png)
+
+##### 2022/1/2:
+
+1、刷新浏览器两种方式：
+
+* f5刷新：部分加载数据
+* shift+f5 刷新：会重新加载所有数据
+
+2、关于如何获取到post请求的内容：
+
+* 先通过print方法打印request.Post中的内容进行查看相关内容
+* 通过value = request.Post.get('key')形式获取相应的字段
+
+3、关于正则表达式
+
+* 引入正则表达式模块：import re
+
+* re.match(r'^[a-zA-Z0-9]{5-50}$')的形式
 
 #### 问题日志
 
