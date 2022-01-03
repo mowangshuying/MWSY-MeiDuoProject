@@ -50,7 +50,7 @@ class RegisterView(View):
         try:
             User.objects.create_user(username=username,password=password,mobile=mobile)
         except DatabaseError:
-            return  render(request,'register.html',{'register_errmsg':注册失败})
+            return  render(request,'register.html',{'register_errmsg':'注册失败'})
 
         # 响应结果:重定向到首页
         return http.HttpResponse('注册成功！重定向到首页!')
