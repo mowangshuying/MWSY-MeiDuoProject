@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views import View
 from django import http
 import re
 from django.db import DatabaseError
+from django.urls import reverse
+
 
 #此检查检测应解析但不解析的名称。由于动态分派和duck类型，在有限但有用的情况下，
 # 这是可能的。顶级和类级项目比实例项目更受支持
@@ -53,4 +55,8 @@ class RegisterView(View):
             return  render(request,'register.html',{'register_errmsg':'注册失败'})
 
         # 响应结果:重定向到首页
-        return http.HttpResponse('注册成功！重定向到首页!')
+        # return http.HttpResponse('注册成功！重定向到首页!')
+        # return redirect('/')
+
+        # 通过命名空间重定向
+        return redirect(reverse('contents:index'))

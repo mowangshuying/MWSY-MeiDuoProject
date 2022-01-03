@@ -22,5 +22,7 @@ urlpatterns = [
     #users
     # url(r'',include('users.urls',namesapce='users')是错误的
     # 下面这个才是正确的
-    url(r'',include(('users.urls','users'),namespace='users'))
+    url(r'',include(('users.urls','users'),namespace='users')),
+    # 添加contents子应用的相关内容
+    url(r'',include(('contents.urls','contents'),namespace='contents')),
 ]
