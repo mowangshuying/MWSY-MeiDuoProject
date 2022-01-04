@@ -28,6 +28,27 @@ let vm = new Vue({
                 this.error_name_message = '请输入5-20个字符的用户名';
                 this.error_name = true;
             }
+
+            //判断用户名是否重复注册
+            if(this.error_name == false){
+                //axios.get('url','请求头').then().catch()
+                let url = '/usernames/'+this.username+'/count/';
+                axios.get(url,{
+                    responseType:'json'
+                })
+                .then(resp =>{
+                    if(resp.data.count ==1){
+                        this.error_name_message = '用户名已存在';
+                        this.error_name = true;
+                    }else{
+                        this.error_name = false;
+                    }
+                })
+                .catch(error=>{
+                    this.error_name_message = '未知错误或者响应';
+                    this.error_name = true;
+                })
+            }
         },
         check_password(){
             let re = /^[0-9A-Za-z]{8,20}$/;
