@@ -4,11 +4,23 @@ from django import http
 import re
 from django.db import DatabaseError
 from django.urls import reverse
+from django.contrib.auth import login
 
 
 #此检查检测应解析但不解析的名称。由于动态分派和duck类型，在有限但有用的情况下，
 # 这是可能的。顶级和类级项目比实例项目更受支持
 from users.models import User
+from MeiDuoMall.utils.response_code import RETCODE
+
+
+class UsernameCountView(View):
+    def get(self,request,username):
+        # 接收参数 校验参数
+        count = User.objects.filter(username=username).count()
+
+        # 返回结果
+        return http.JsonResponse({'code':RETCODE.OK,'errmsg':'OK','count':count})
+
 
 class RegisterView(View):
     def get(self,request):
@@ -50,13 +62,14 @@ class RegisterView(View):
 
         # 保存注册业务核心
         try:
-            User.objects.create_user(username=username,password=password,mobile=mobile)
+            user = User.objects.create_user(username=username,password=password,mobile=mobile)
         except DatabaseError:
             return  render(request,'register.html',{'register_errmsg':'注册失败'})
+
+        login(request,user)
 
         # 响应结果:重定向到首页
         # return http.HttpResponse('注册成功！重定向到首页!')
         # return redirect('/')
-
         # 通过命名空间重定向
         return redirect(reverse('contents:index'))

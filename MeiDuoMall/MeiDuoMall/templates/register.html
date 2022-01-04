@@ -66,7 +66,7 @@
 							<label>短信验证码:</label>
 							<input type="text" name="sms_code" id="msg_code" class="msg_input">
 							<a href="javascript:;" class="get_msg_code">获取短信验证码</a><br/>
-							<span class="error_tip">请填写短信验证码
+							<span class="error_tip">请填写短信验证码</span>
 						</li><br/>
 
 						<!--用户协议-->
@@ -74,6 +74,10 @@
 							<input type="checkbox" v-model="allow" @change="check_allow" name="allow" id="allow">
 							<label>同意”美多商城用户使用协议“</label><br/>
 							<span class="error_tip" v-show="error_allow">请勾选用户协议</span>
+							
+							{% if register_errmsg %}
+								<span class="error_tip">{{register_errmsg}}</span>
+							{% endif %}
 						</li><br/>
 
 						<li class="reg_sub">
