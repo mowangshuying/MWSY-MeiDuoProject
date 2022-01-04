@@ -93,8 +93,33 @@ python manage.py migrate
 3、关于正则表达式
 
 * 引入正则表达式模块：import re
+* re.match(r'^[a-zA-Z0-9]{5,50}$')的形式
 
-* re.match(r'^[a-zA-Z0-9]{5-50}$')的形式
+##### 2022/1/4:
+
+* 解决之前因为正则表达式写的不规范导致错误，我将{5,20}写成了{5-20}导致正则匹配错误
+
+* 利用axios向服务端发送get请求判断用户名是否存在
+
+  ```javascript
+   //axios.get('url','请求头').then().catch()
+                  let url = '/usernames/'+this.username+'/count/';
+                  axios.get(url,{
+                      responseType:'json'
+                  })
+                  .then(resp =>{
+                      if(resp.data.count ==1){
+                          this.error_name_message = '用户名已存在';
+                          this.error_name = true;
+                      }else{
+                          this.error_name = false;
+                      }
+                  })
+                  .catch(error=>{
+                      this.error_name_message = '未知错误或者响应';
+                      this.error_name = true;
+                  })
+  ```
 
 #### 问题日志
 
@@ -107,6 +132,17 @@ python manage.py migrate
 解决方法：
 想要再次推送删除掉此安装包(大文件)，从远端克隆一份代码(newcode)，将之前那份代码(oldcode)的除去.git文件夹全部文件到从远端克隆的文件夹(newcode)中,替换相应内容，再提交即可。
 ```
+
+```
+关于正则使用错误：
+url(r'^usernames/(?P<username>[a-zA-Z0-9_-]{5-20})/count/$',views.UsernameCountView.as_view())
+
+    url(r'^usernames/(?P<username>[a-zA-Z0-9_-]{5,20})/count/$',views.UsernameCountView.as_view()),
+
+由于我将{5,20}写成了{5-20}导致正则表达式一直匹配不上
+```
+
+
 
 #### 一些发现
 
