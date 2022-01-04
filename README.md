@@ -97,29 +97,33 @@ python manage.py migrate
 
 ##### 2022/1/4:
 
-* 解决之前因为正则表达式写的不规范导致错误，我将{5,20}写成了{5-20}导致正则匹配错误
+1、解决之前因为正则表达式写的不规范导致错误，我将{5,20}写成了{5-20}导致正则匹配错误
 
-* 利用axios向服务端发送get请求判断用户名是否存在
+2、利用axios向服务端发送get请求判断用户名是否存在
 
-  ```javascript
-   //axios.get('url','请求头').then().catch()
-                  let url = '/usernames/'+this.username+'/count/';
-                  axios.get(url,{
-                      responseType:'json'
-                  })
-                  .then(resp =>{
-                      if(resp.data.count ==1){
-                          this.error_name_message = '用户名已存在';
-                          this.error_name = true;
-                      }else{
-                          this.error_name = false;
-                      }
-                  })
-                  .catch(error=>{
-                      this.error_name_message = '未知错误或者响应';
-                      this.error_name = true;
-                  })
-  ```
+```javascript
+ //axios.get('url','请求头').then().catch()
+                let url = '/usernames/'+this.username+'/count/';
+                axios.get(url,{
+                    responseType:'json'
+                })
+                .then(resp =>{
+                    if(resp.data.count ==1){
+                        this.error_name_message = '用户名已存在';
+                        this.error_name = true;
+                    }else{
+                        this.error_name = false;
+                    }
+                })
+                .catch(error=>{
+                    this.error_name_message = '未知错误或者响应';
+                    this.error_name = true;
+                })
+```
+
+3、验证码逻辑分析
+
+![image-20220104234612865](./doc/img/image-20220104234612865.png)
 
 #### 问题日志
 
