@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'contents',
+    'verifications',# 验证码模块
 ]
 
 # 中间件配置

@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'',include(('users.urls','users'),namespace='users')),
     # 添加contents子应用的相关内容
     url(r'',include(('contents.urls','contents'),namespace='contents')),
+    url(r'',include(('verifications.urls','verifications'),namespace='verifications')),
 ]
