@@ -125,6 +125,114 @@ python manage.py migrate
 
 ![image-20220104234612865](./doc/img/image-20220104234612865.png)
 
+* 准备captcha扩展包，用于存储图形验证码
+
+  ![image-20220105084848690](./doc/img/image-20220105084848690.png)
+
+* 准备redis数据库，存储图形验证码：redis 2号库，在setting文件夹下的dev.py添加redis设置信息
+
+  ```python
+  # 配置redis数据库 https://django-redis-chs.readthedocs.io/zh_CN/latest/
+  CACHES = {
+      # 默认
+      "default": {
+          "BACKEND": "django_redis.cache.RedisCache",
+          "LOCATION": "redis://127.0.0.1:6379/0",
+          "OPTIONS": {
+              "CLIENT_CLASS": "django_redis.client.DefaultClient",
+          }
+      },
+      # session
+      "session": {
+          "BACKEND": "django_redis.cache.RedisCache",
+          "LOCATION": "redis://127.0.0.1:6379/1",
+          "OPTIONS": {
+              "CLIENT_CLASS": "django_redis.client.DefaultClient",
+          }
+      },
+      # virify_code
+      "virify_code":{
+          # 验证码
+          "BACKEND": "django_redis.cache.RedisCache",
+          "LOCATION": "redis://127.0.0.1:6379/2",
+          "OPTIONS": {
+              "CLIENT_CLASS": "django_redis.client.DefaultClient",
+          }
+      },
+  }
+  ```
+
+* 图形验证码后端逻辑实现
+
+  1、创建子应用验证码:verifications
+
+  2、在工程文件夹下的urls.py文件中设置路由信息
+
+  ```python
+   url(r'',include(('verifications.urls','verifications'),namespace='verifications')),
+  ```
+
+  在app/verifications文件下新建urls.py文件，设置验证码的路由信息
+
+  ```
+  from django.conf.urls import url
+  from . import  views
+  
+  urlpatterns = [
+      url(r'^image_codes/(?P<uuid>[\w-]+)/$',views.ImageCodeView.as_view())
+  ]
+  ```
+
+  在app/verifications文件夹下的models.py创建ImageCodeView的视图：
+
+  ```python
+  from django.views import View
+  class ImageCodeView(View):
+      pass
+  ```
+
+##### 2022/1/5:
+
+后端简单逻辑：将captcha文件夹放入到app/verifications/libs文件夹下,利用captcha生成验证码的图像，利用redis存储创建的图形验证码，设置超时时间
+
+```python
+from django.views import View
+
+from django_redis import get_redis_connection
+from django import http
+from verifications.libs.captcha.captcha import captcha
+
+# 在此处创建你的视图
+class ImageCodeView(View):
+    def get(self,request,uuid):
+        # 接收和校验参数
+        # 生成图形验证码
+        text,image = captcha.generate_captcha()
+        print('text:',text,'image:',image)
+        # 保存图形验证码
+        redis_conn = get_redis_connection('virify_code')
+        #redis_conn.setex('key','expires','value')
+        redis_conn.setex('img_%s'%uuid,300,text)
+
+        return http.HttpResponse(image,content_type='image/jepg')
+```
+
+前端简单逻辑记录：
+
+register.html中，引入common.js，用来调用生成uuid的相关函数；绑定变量image_code_url 和设置点击图片切换函数generate_image_code
+
+![image-20220105232359541](./doc/img/image-20220105232359541.png)
+
+![image-20220105232220787](./doc/img/image-20220105232220787.png)
+
+register.js中,绑定变量
+
+![image-20220105232515125](./doc/img/image-20220105232515125.png)
+
+生成uuid，
+
+![image-20220105232425590](./doc/img/image-20220105232425590.png)
+
 #### 问题日志
 
 由于过程中经常遇到各种奇葩问题，所以特此记录。

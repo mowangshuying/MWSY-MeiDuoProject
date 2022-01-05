@@ -8,6 +8,8 @@ let vm = new Vue({
         password2:'',
         mobile:'',
         allow:'',
+        image_code_url:'',
+        uuid:'',
 
         error_name:false,
         error_password:false,
@@ -17,7 +19,20 @@ let vm = new Vue({
         error_name_message:'',
         error_mobile_message:'',
     },
+
+    mounted(){
+        //生成图形验证码
+        this.generate_image_code()
+    },
+
+
+
     methods:{//定义事件方法
+        generate_image_code() {
+            this.uuid = generateUUID();
+            this.image_code_url = '/image_codes/'+this.uuid+'/';
+        },
+
         check_username(){
             let re = /^[a-zA-Z0-9_-]{5,20}$/;
             if(re.test(this.username)){
