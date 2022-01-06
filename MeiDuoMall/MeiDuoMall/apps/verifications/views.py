@@ -3,6 +3,7 @@ from django.views import View
 from django_redis import get_redis_connection
 from django import http
 from verifications.libs.captcha.captcha import captcha
+from MeiDuoMall.MeiDuoMall.utils import constants
 
 # 在此处创建你的视图
 class ImageCodeView(View):
@@ -14,7 +15,7 @@ class ImageCodeView(View):
         # 保存图形验证码
         redis_conn = get_redis_connection('virify_code')
         #redis_conn.setex('key','expires','value')
-        redis_conn.setex('img_%s'%uuid,300,text)
+        redis_conn.setex('img_%s'%uuid,constants.IMAGE_CODE_REDIS_EXPIRES,text)
 
         return http.HttpResponse(image,content_type='image/jepg')
 
