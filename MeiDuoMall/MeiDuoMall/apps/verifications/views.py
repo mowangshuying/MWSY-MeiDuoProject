@@ -3,7 +3,7 @@ from django.views import View
 from django_redis import get_redis_connection
 from django import http
 from verifications.libs.captcha.captcha import captcha
-from MeiDuoMall.MeiDuoMall.utils import constants
+from MeiDuoMall.utils import constants
 
 # 在此处创建你的视图
 class ImageCodeView(View):

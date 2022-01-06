@@ -10,14 +10,18 @@ let vm = new Vue({
         allow:'',
         image_code_url:'',
         uuid:'',
+        image_code:'',
+
 
         error_name:false,
         error_password:false,
         error_mobile:false,
         error_allow:false,
+        error_image_code:false,
 
         error_name_message:'',
         error_mobile_message:'',
+        error_image_code_message:'',
     },
 
     mounted(){
@@ -89,6 +93,17 @@ let vm = new Vue({
                 this.error_mobile = true;
             }
         },
+
+        check_image_code(){
+            //校验图形验证码
+            if(this.image_code.length!=4){
+                this.error_image_code_message = '请输入图形验证码';
+                this.error_image_code = true;
+            }else{
+                this.error_image_code = false;
+            }
+        },
+
         check_allow(){
             if (!this.allow) {
                 this.error_allow = true;
