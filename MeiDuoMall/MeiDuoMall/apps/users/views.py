@@ -5,6 +5,7 @@ import re
 from django.db import DatabaseError
 from django.urls import reverse
 from django.contrib.auth import login
+from django.contrib.auth import authenticate
 
 
 #此检查检测应解析但不解析的名称。由于动态分派和duck类型，在有限但有用的情况下，
@@ -81,4 +82,41 @@ class LoginView(View):
         return render(request,'login.html')
 
     def post(self,request):
-        pass
+        # 接收参数
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        remembered = request.POST.get('remembered')
+
+        print('username:',username,'password:',password,
+              'remembered:',remembered)
+
+        if not all([username,password]):
+            return http.HttpResponseForbidden('缺少必须传入的参数')
+
+        # 判断用户名是否是5-20个字符
+        if not re.match(r'^[a-zA-Z0-9_-]{5,20}',username):
+            return http.HttpResponseForbidden('请输入正确的用户名或手机号')
+
+        # 判断用户名是否是5-20个字符
+        if not re.match(r'^[a-zA-Z0-9_-]{5,20}', password):
+            return http.HttpResponseForbidden('请输入正确的用户名或手机号')
+
+        # 验证用户名和密码 authenticate所在的包
+        user = authenticate(username=username, password=password)
+
+        # 该用户没有注册
+        if user is None:
+            return  render(request,'login.html',{'account_errmsg': '用户名或密码错误'})
+
+        # 实现状态保持
+        login(request,user)
+
+        if remembered != 'on':
+            #会话结束后，过期
+            request.session.set_expiry(0)
+        else:
+            # 记住用户的话，none表示两周后过期
+            request.session.set_expiry(None)
+
+        # 跳转到首页
+        return redirect(reverse('contents:index'))
