@@ -73,3 +73,12 @@ class RegisterView(View):
         # return redirect('/')
         # 通过命名空间重定向
         return redirect(reverse('contents:index'))
+
+
+class LoginView(View):
+    def get(self,request):
+        # 直接跳转到登录页面
+        return render(request,'login.html')
+
+    def post(self,request):
+        pass
