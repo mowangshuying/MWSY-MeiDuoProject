@@ -15,12 +15,12 @@
 		<div class="header">
 			<div class="welcome fl">欢迎来到美多商城!</div>
 			<div class="fr">
-				<div class="login_btn fl">
-                    欢迎您：<em>传智播客</em>
+				<div v-if="username" class="login_btn fl">
+                    欢迎您：<em>[[ username ]]</em>
                     <span>|</span>
                     <a href="#">退出</a>
                 </div>
-				<div class="login_btn fl">
+				<div v-else class="login_btn fl">
 					<a href="/login/">登录</a>
 					<span>|</span>
 					<a href="/register/">注册</a>
