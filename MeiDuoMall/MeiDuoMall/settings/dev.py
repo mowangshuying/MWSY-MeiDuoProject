@@ -216,3 +216,6 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # 指定自定义的用户模型类：值的语法 ==> '子应用.用户模型类'
 AUTH_USER_MODEL = 'users.User'
+
+# 跳转到登录路径
+LOGIN_URL = '/login/'

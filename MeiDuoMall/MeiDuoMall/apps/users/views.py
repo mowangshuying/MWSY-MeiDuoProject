@@ -5,6 +5,7 @@ import re
 from django.db import DatabaseError
 from django.urls import reverse
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth import authenticate
 
 
@@ -12,7 +13,7 @@ from django.contrib.auth import authenticate
 # 这是可能的。顶级和类级项目比实例项目更受支持
 from users.models import User
 from MeiDuoMall.utils.response_code import RETCODE
-
+from MeiDuoMall.utils.views import LoginRequiredMixin
 
 class UsernameCountView(View):
     def get(self,request,username):
@@ -118,10 +119,38 @@ class LoginView(View):
             # 记住用户的话，none表示两周后过期
             request.session.set_expiry(None)
 
-        # 跳转到首页
-        response = redirect(reverse('contents:index'))
+
+        next = request.GET.get('next')
+        if next:
+            # 重定向到next
+            response = redirect(next)
+        else:
+            # 重定向到首页
+            response = redirect(reverse('contents:index'))
+
+
         # 设置cookie及过期时间
         response.set_cookie('username', user.username, max_age=3600 * 24 * 15)
 
-        return  response
+        return response
 
+
+class LogoutView(View):
+    def get(self,request):
+        # 实现退出登录的逻辑
+        logout(request)
+        response = redirect(reverse('contents:index'))
+        response.delete_cookie('username')
+        return response
+
+
+class UserInfoView(LoginRequiredMixin,View):
+    # 用户中心
+    def get(self, request):
+        #if request.user.is_authenticated:
+            return render(request,'user_center_info.html')
+        #else:
+        #    return redirect(reverse('users:login'))
+
+    def post(self,request):
+        pass
