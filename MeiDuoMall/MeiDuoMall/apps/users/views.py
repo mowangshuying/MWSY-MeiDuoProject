@@ -148,9 +148,25 @@ class UserInfoView(LoginRequiredMixin,View):
     # 用户中心
     def get(self, request):
         #if request.user.is_authenticated:
-            return render(request,'user_center_info.html')
+        #    return render(request,'user_center_info.html')
         #else:
         #    return redirect(reverse('users:login'))
 
+        context = {
+            'username': request.user.username,
+            'mobile': request.user.mobile,
+            'email': request.user.email,
+            'email_active': request.user.email_active,
+        }
+
+        print('context:', context)
+
+        return render(request, 'user_center_info.html', context)
+
     def post(self,request):
+        pass
+
+class EmailView(View):
+    '''添加邮箱'''
+    def put(self,request):
         pass

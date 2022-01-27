@@ -1,11 +1,12 @@
-## MeiDuoProject
+# MeiDuoProject
 
-#### 介绍
+## 介绍
+
 python项目：美多商城，仅仅用于个人的学习，记录学习利用django开发项目的过程等
 
-#### 环境说明
+## 环境说明
 
-软件列表
+### 软件列表
 
 ```
 Package                Version
@@ -33,7 +34,7 @@ wrapt                  1.13.3
 zipp                   3.6.0
 ```
 
-安装软件
+### 安装软件
 
 ```关于安装
 pip install django==3.2.10
@@ -49,7 +50,7 @@ pip insatll django-redis
 
 django3.x版本不支持mysql5.x,所以我使用的版本为mysql8.x
 
-#### 常用的命令
+### 常用的命令
 
 ```
 #创建一个项目
@@ -64,11 +65,9 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-#### 开发日志
+## 开发日志
 
-##### 2021/12/28-2022/1/1：
-
-##### 2022/1/1: 
+### 2022/1/1: 安装mysql8.x
 
 1、mysql8.x的安装包放在doc/soft文件夹下
 
@@ -78,50 +77,50 @@ python manage.py migrate
 
 ![image-20220101141845578](./doc/img/image-20220101141845578.png)
 
-##### 2022/1/2:
+### 2022/1/2:刷新浏览器的方式，查看post请求的内容，简单的正则表达式的使用
 
-1、刷新浏览器两种方式：
+#### 1、刷新浏览器两种方式：
 
 * f5刷新：部分加载数据
 * shift+f5 刷新：会重新加载所有数据
 
-2、关于如何获取到post请求的内容：
+#### 2、关于如何获取到post请求的内容：
 
 * 先通过print方法打印request.Post中的内容进行查看相关内容
 * 通过value = request.Post.get('key')形式获取相应的字段
 
-3、关于正则表达式
+#### 3、关于正则表达式
 
 * 引入正则表达式模块：import re
 * re.match(r'^[a-zA-Z0-9]{5,50}$')的形式
 
-##### 2022/1/4:
+### 2022/1/4:记录正则表达式的错误书写、利用axios向服务端发送get请求(捕获异常、处理函数回调)、图形验证码的使用
 
-1、解决之前因为正则表达式写的不规范导致错误，我将{5,20}写成了{5-20}导致正则匹配错误
+#### 1、解决之前因为正则表达式写的不规范导致错误，我将{5,20}写成了{5-20}导致正则匹配错误
 
-2、利用axios向服务端发送get请求判断用户名是否存在
+#### 2、利用axios向服务端发送get请求判断用户名是否存在
 
 ```javascript
  //axios.get('url','请求头').then().catch()
-                let url = '/usernames/'+this.username+'/count/';
-                axios.get(url,{
-                    responseType:'json'
-                })
-                .then(resp =>{
-                    if(resp.data.count ==1){
-                        this.error_name_message = '用户名已存在';
-                        this.error_name = true;
-                    }else{
-                        this.error_name = false;
-                    }
-                })
-                .catch(error=>{
-                    this.error_name_message = '未知错误或者响应';
-                    this.error_name = true;
-                })
+let url = '/usernames/'+this.username+'/count/';
+axios.get(url,{
+    responseType:'json'
+})
+    .then(resp =>{
+    if(resp.data.count ==1){
+        this.error_name_message = '用户名已存在';
+        this.error_name = true;
+    }else{
+        this.error_name = false;
+    }
+})
+    .catch(error=>{
+    this.error_name_message = '未知错误或者响应';
+    this.error_name = true;
+})
 ```
 
-3、验证码逻辑分析
+#### 3、验证码逻辑分析
 
 ![image-20220104234612865](./doc/img/image-20220104234612865.png)
 
@@ -191,7 +190,7 @@ python manage.py migrate
       pass
   ```
 
-##### 2022/1/5:
+### 2022/1/5:图形验证码的后端逻辑和前端逻辑的具体实现，
 
 后端简单逻辑：将captcha文件夹放入到app/verifications/libs文件夹下,利用captcha生成验证码的图像，利用redis存储创建的图形验证码，设置超时时间
 
@@ -217,9 +216,7 @@ class ImageCodeView(View):
         return http.HttpResponse(image,content_type='image/jepg')
 ```
 
-前端简单逻辑记录：
-
-register.html中，引入common.js，用来调用生成uuid的相关函数；绑定变量image_code_url 和设置点击图片切换函数generate_image_code
+前端简单逻辑：register.html中，引入common.js，用来调用生成uuid的相关函数；绑定变量image_code_url 和设置点击图片切换函数generate_image_code
 
 ![image-20220105232359541](./doc/img/image-20220105232359541.png)
 
@@ -233,19 +230,74 @@ register.js中,绑定变量
 
 ![image-20220105232425590](./doc/img/image-20220105232425590.png)
 
-#### 2022/1/7:
+### 2022/1/7:首页跳转登录界面和登录相关逻辑验证
 
 * 首页跳转到注册页面
 
 * 点击登录按钮后，首页跳转到登录页面，登录之后跳转到首页
 * 登录相关逻辑验证
 
-##### 2022/1/8:
+### 2022/1/8:跳转到用户中心
 
 * 实现了点击用户中心，并跳转到用户中心的功能，如果没有登录则跳转到登录页面，登录成功后再跳转回来
 * 关于封装自定义登录类等等
 
-#### 问题日志
+### 2022/1/27:验证邮箱功能实现
+
+#### 用户模型类补充email_active字段
+
+1、添加邮箱验证的状态email_active
+
+![image-20220127224515947](./doc/img/image-20220127224515947.png)
+
+2、执行如下操作更新表字段
+
+```python
+# 创建迁移文件
+python manage.py makemigrations
+# 执行迁移命令
+python manage.py migrate
+```
+
+3、产生的结果
+
+![image-20220127224806472](./doc/img/image-20220127224806472.png)
+
+#### 查询并渲染用户基本信息
+
+1、在UserInfoView中处理get请求，设置context数据：包括用户名，手机号，邮箱，邮箱激活状态
+
+![image-20220128001350038](./doc/img/image-20220128001350038.png)
+
+2、页面上接收这些数据，并设置到绑定到vue的对象中
+
+![image-20220128001628587](./doc/img/image-20220128001628587.png)
+
+![image-20220128001727459](./doc/img/image-20220128001727459.png)
+
+3、展示用户的信息等
+
+![image-20220128002055341](./doc/img/image-20220128002055341.png)
+
+#### 修改用户绑定的邮箱:接口的定义
+
+#####  1、crf认证
+
+```
+"x-csrftoken":getcookie('x-csrftoken')
+```
+
+##### 2、接口设计和定义
+
+###### 在users子应用下的views.py中定义EmailView类，定义put接口
+
+![image-20220128003001153](./doc/img/image-20220128003001153.png)
+
+###### 在user子应用下的urls.py中定义范文的路由关系
+
+![image-20220128003131629](./doc/img/image-20220128003131629.png)
+
+## 问题日志
 
 由于过程中经常遇到各种奇葩问题，所以特此记录。
 
@@ -268,7 +320,7 @@ url(r'^usernames/(?P<username>[a-zA-Z0-9_-]{5-20})/count/$',views.UsernameCountV
 
 
 
-#### 一些发现
+## 一些发现
 
 pycharm会在此处显示你所有安装的软件包，和所用的python解释器的版本信息
 
