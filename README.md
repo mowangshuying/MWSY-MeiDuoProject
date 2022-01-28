@@ -297,6 +297,31 @@ python manage.py migrate
 
 ![image-20220128003131629](./doc/img/image-20220128003131629.png)
 
+## 2022/1/28:邮箱校验
+
+### 1、采用put命令，因为是修改上条数据
+
+### 2 接收参数、校验参数、处理数据（保存到数据库或者丢弃）
+
+![image-20220128090544507](./doc/img/image-20220128090544507.png)
+
+### 3 总结
+
+#### 3.1 使用json库，必须引入json库
+
+```python
+import json
+```
+
+#### 3.2 request.body获取到的是字节数据，需要使用decode转化为jsonstr
+
+#### 3.3 保存数据
+
+```
+user.email = email
+user.save()
+```
+
 ## 问题日志
 
 由于过程中经常遇到各种奇葩问题，所以特此记录。

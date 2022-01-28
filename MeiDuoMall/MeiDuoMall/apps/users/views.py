@@ -1,12 +1,16 @@
 from django.shortcuts import render,redirect
 from django.views import View
 from django import http
-import re
+import re,json, logging
 from django.db import DatabaseError
 from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate
+
+
+# 创建日志输出器
+logger = logging.getLogger('django')
 
 
 #此检查检测应解析但不解析的名称。由于动态分派和duck类型，在有限但有用的情况下，
@@ -145,12 +149,13 @@ class LogoutView(View):
 
 
 class UserInfoView(LoginRequiredMixin,View):
+
     # 用户中心
     def get(self, request):
-        #if request.user.is_authenticated:
-        #    return render(request,'user_center_info.html')
-        #else:
-        #    return redirect(reverse('users:login'))
+        # if request.user.is_authenticated:
+        #     return render(request,'user_center_info.html')
+        # else:
+        #     return redirect(reverse('users:login'))
 
         context = {
             'username': request.user.username,
@@ -166,7 +171,32 @@ class UserInfoView(LoginRequiredMixin,View):
     def post(self,request):
         pass
 
+
 class EmailView(View):
-    '''添加邮箱'''
-    def put(self,request):
-        pass
+
+    """添加邮箱"""
+    def put(self, request):
+        # 接收参数
+        json_str = request.body.decode()
+        json_dict = json.loads(json_str)
+        email = json_dict.get('email')
+
+        # json 打印输出
+        print('json:', json)
+
+        # 校验参数
+        if not email:
+            return http.HttpResponseForbidden('缺少email参数')
+        if not re.match(r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
+            return http.HttpResponseForbidden('参数email有误')
+
+        # 将用户传入邮箱保存到用户数据表的email字段中
+
+        try:
+            request.user.email = email
+            request.user.save()
+        except Exception as e:
+            logging.error(e)
+            return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
+
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
