@@ -305,22 +305,32 @@ python manage.py migrate
 
 ![image-20220128090544507](./doc/img/image-20220128090544507.png)
 
-### 3 总结
+### 3、修改登录邮箱需要验证用户是否登录，继承LoginRequiredMixin
 
-#### 3.1 使用json库，必须引入json库
+![image-20220128122851238](./doc/img/image-20220128122851238.png)
+
+### 4 邮箱授权码
+
+![image-20220128134310115](./doc/img/image-20220128134310115.png)
+
+### 4 总结
+
+#### 4.1 使用json库，必须引入json库
 
 ```python
 import json
 ```
 
-#### 3.2 request.body获取到的是字节数据，需要使用decode转化为jsonstr
+#### 4.2 request.body获取到的是字节数据，需要使用decode转化为jsonstr
 
-#### 3.3 保存数据
+#### 4.3 保存数据
 
 ```
 user.email = email
 user.save()
 ```
+
+
 
 ## 问题日志
 

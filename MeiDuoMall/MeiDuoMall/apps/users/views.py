@@ -172,7 +172,7 @@ class UserInfoView(LoginRequiredMixin,View):
         pass
 
 
-class EmailView(View):
+class EmailView(LoginRequiredMixin, View):
 
     """添加邮箱"""
     def put(self, request):
