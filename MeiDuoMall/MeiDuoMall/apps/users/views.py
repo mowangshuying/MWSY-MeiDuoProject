@@ -7,6 +7,10 @@ from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate
+from django.core.mail import send_mail
+from django.conf import settings
+from itsdangerous import TimedJSONWebSignatureSerializer as TJWSSerializer, BadData
+from . import constants
 
 
 # 创建日志输出器
@@ -199,4 +203,31 @@ class EmailView(LoginRequiredMixin, View):
             logging.error(e)
             return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
 
+        verify_url = self.generate_verify_email_url(request.user)
+        self.send_verify_email(email,verify_url)
+
         return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
+
+    def generate_verify_email_url(self,user):
+        """
+        生成验证邮箱的url
+        """
+        serializer = TJWSSerializer(settings.SECRET_KEY, expires_in=constants.VERIFY_EMAIL_TOKEN_EXPIRES)
+        data = {'user_id': user.id, 'email': user.email}
+        token = serializer.dumps(data).decode()
+        verify_url = 'http://www.meiduo.site:8080/success_verify_email.html?token=' + token
+        return verify_url
+
+    def send_verify_email(self, to_email, verify_url):
+        """
+        发送验证邮箱邮件
+        :param to_email: 收件人邮箱
+        :param verify_url: 验证链接
+        :return: None
+        """
+        subject = "美多商城邮箱验证"
+        html_message = '<p>尊敬的用户您好！</p>' \
+                       '<p>感谢您使用美多商城。</p>' \
+                       '<p>您的邮箱为：%s 。请点击此链接激活您的邮箱：</p>' \
+                       '<p><a href="%s">%s<a></p>' % (to_email, verify_url, verify_url)
+        send_mail(subject, "", settings.EMAIL_FROM, [to_email], html_message=html_message)
