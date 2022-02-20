@@ -168,7 +168,7 @@ class UserInfoView(LoginRequiredMixin,View):
             'email_active': request.user.email_active,
         }
 
-        print('context:', context)
+        print('UserInfoView::get context:', context)
 
         return render(request, 'user_center_info.html', context)
 
@@ -186,16 +186,17 @@ class EmailView(LoginRequiredMixin, View):
         email = json_dict.get('email')
 
         # json 打印输出
-        print('json:', json)
+        print('json_dict:', json_dict)
 
         # 校验参数
         if not email:
             return http.HttpResponseForbidden('缺少email参数')
+        
+        # 验证邮箱格式是否正确
         if not re.match(r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
             return http.HttpResponseForbidden('参数email有误')
 
         # 将用户传入邮箱保存到用户数据表的email字段中
-
         try:
             request.user.email = email
             request.user.save()
@@ -215,7 +216,8 @@ class EmailView(LoginRequiredMixin, View):
         serializer = TJWSSerializer(settings.SECRET_KEY, expires_in=constants.VERIFY_EMAIL_TOKEN_EXPIRES)
         data = {'user_id': user.id, 'email': user.email}
         token = serializer.dumps(data).decode()
-        verify_url = 'http://www.meiduo.site:8080/success_verify_email.html?token=' + token
+        verify_url = 'http://localhost:8080/emails/verification/?token=' + token
+        print('verify_url:',verify_url)
         return verify_url
 
     def send_verify_email(self, to_email, verify_url):
@@ -231,3 +233,55 @@ class EmailView(LoginRequiredMixin, View):
                        '<p>您的邮箱为：%s 。请点击此链接激活您的邮箱：</p>' \
                        '<p><a href="%s">%s<a></p>' % (to_email, verify_url, verify_url)
         send_mail(subject, "", settings.EMAIL_FROM, [to_email], html_message=html_message)
+
+class VerifyEmailView(View):
+    def get(self, request):
+        """实现邮箱验证逻辑"""
+        # 接收参数
+        token = request.GET.get('token')
+        print('token:',token)
+        # 校验参数：判断token是否为空和过期，提取user
+        if not token:
+            return http.HttpResponseBadRequest('缺少token')
+
+        user = self.check_verify_email_token(token)
+        # print(user)
+        if not user:
+            return http.HttpResponseForbidden('无效的token')
+
+        # 修改email_active的值为True
+        try:
+            user.email_active = True
+            user.save()
+        except Exception as e:
+            logger.error(e)
+            return http.HttpResponseServerError('激活邮件失败')
+
+        # 返回邮箱验证结果
+        return redirect(reverse('users:info'))
+    
+    def check_verify_email_token(self,token):
+        """
+        验证token并提取user
+        :param token: 用户信息签名后的结果
+        :return: user, None
+        """
+        serializer = TJWSSerializer(settings.SECRET_KEY, expires_in=constants.VERIFY_EMAIL_TOKEN_EXPIRES)
+        try:
+            data = serializer.loads(token)
+        except BadData:
+            return None
+        else:
+            user_id = data.get('user_id')
+            email = data.get('email')
+            try:
+                user = User.objects.get(id=user_id, email=email)
+            except User.DoesNotExist:
+                return None
+            else:
+                return user
+            
+
+class AdressView(LoginRequiredMixin,View):
+    def get(self,request):
+        return render(request,'user_center_site.html')
