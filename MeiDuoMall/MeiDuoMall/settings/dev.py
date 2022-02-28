@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'users',
     'contents',
     'verifications',# 验证码模块
+    'areas',# 省市区三级联动
 ]
 
 # 中间件配置
