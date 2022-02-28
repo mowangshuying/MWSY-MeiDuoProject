@@ -25,6 +25,7 @@ let vm = new Vue({
         editing_address_index: '',
         edit_title_index: '',
         new_title: '',
+        add_title: '新 增',
 
         error_receiver: false,
         error_place: false,
@@ -96,6 +97,7 @@ let vm = new Vue({
             this.form_address.tel = '';
             this.form_address.email = '';
             this.editing_address_index = '';
+            this.add_title = '新 增';
         },
         // 展示编辑地址弹框
         show_edit_site(index){
@@ -104,6 +106,7 @@ let vm = new Vue({
             this.editing_address_index = index.toString();
             // 只获取要编辑的数据
             this.form_address = JSON.parse(JSON.stringify(this.addresses[index]));
+            this.add_title = '修 改';
         },
         // 校验收货人
         check_receiver(){
