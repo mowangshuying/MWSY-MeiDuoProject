@@ -4,6 +4,17 @@
 
 python项目：美多商城，仅仅用于个人的学习，记录学习利用django开发项目的过程等
 
+### Tips：
+
+* 回退本地版本并推送到远端：
+
+  ```shell
+  # 回退一个版本
+  git reset head~
+  # 强制推送到远端
+  git push -f
+  ```
+
 ## 环境说明
 
 ### 软件列表
@@ -297,37 +308,147 @@ python manage.py migrate
 
 ![image-20220128003131629](./doc/img/image-20220128003131629.png)
 
-## 2022/1/28:邮箱校验
+### 2022/1/28:邮箱校验
 
-### 1、采用put命令，因为是修改上条数据
+#### 1、采用put命令，因为是修改上条数据
 
-### 2 接收参数、校验参数、处理数据（保存到数据库或者丢弃）
+#### 2 接收参数、校验参数、处理数据（保存到数据库或者丢弃）
 
 ![image-20220128090544507](./doc/img/image-20220128090544507.png)
 
-### 3、修改登录邮箱需要验证用户是否登录，继承LoginRequiredMixin
+#### 3、修改登录邮箱需要验证用户是否登录，继承LoginRequiredMixin
 
 ![image-20220128122851238](./doc/img/image-20220128122851238.png)
 
-### 4 邮箱授权码
+#### 4、邮箱授权码
 
 ![image-20220128134310115](./doc/img/image-20220128134310115.png)
 
-### 4 总结
+#### 4 总结
 
-#### 4.1 使用json库，必须引入json库
+##### 4.1 使用json库，必须引入json库
 
 ```python
 import json
 ```
 
-#### 4.2 request.body获取到的是字节数据，需要使用decode转化为jsonstr
+##### 4.2 request.body获取到的是字节数据，需要使用decode转化为jsonstr
 
-#### 4.3 保存数据
+##### 4.3 保存数据
 
 ```
 user.email = email
 user.save()
+```
+
+### 2022/6/5 用户详情页，用户浏览记录 设计浏览记录的存储方案
+
+Redis对于每个用户维护一条浏览记录，一个list对应一个用户的浏览记录，只有登录的用户才需要保存用户的浏览记录
+
+>history_user_id1 2 8 5
+>
+>history_user_id2 3 6 9
+>
+>history_user_id3 1 7 4 3 6
+
+#### 1、存储数据说明
+
+虽然记录浏览界面上要展示商品的一些sku信息，但是我们在存储时候没有必要存很多的SKU信息，我们选择存储sku信息的编号（sku_id）来表示该件商品的浏览记录，存储数据为sku_id
+
+#### 2、存储位置说明
+
+用户浏览记录是临时数据，经常变化，数据量不大，所以我们选择内存型数据库进行存储。存储位置Redis的3号数据库
+
+```python
+CACHES = {
+    "history": { # 用户浏览记录
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+}
+```
+
+#### 3、存储类型说明
+
+由于用户浏览记录和用户浏览顺序相关，所以我们选择使用Redis中的list类型存储sku_id:
+
+* 每个用户维护一条浏览数据，且浏览数据都是独立存储的，不能共用，所以我们需要对用户的浏览记录进行唯一标识
+* 我们可以使用登录用户的id标识该用户的浏览记录，
+* 存储类型 'history_user_id':[sku_id1,sku_id_2, ....]
+
+#### 4、存储逻辑说明
+
+sku信息不能重复，最近一次浏览的商品的sku排在最前边，以此类推
+
+每个用户最多保存5个sku信息，存储逻辑，先去重再存储，最后截取，先去重：lrem，再添加：lpush，再截取：ltrim
+
+关于redis的命令：
+
+lrem key count value
+
+count>0  从左往右删除value
+
+count<0 从右往左删除value
+
+count=0, 删除指定的全部元素
+
+### 2022/6/5 商品详情页-用户浏览记录-保存浏览记录
+
+请求方式
+
+| 选项     | 方案               |
+| -------- | ------------------ |
+| 请求方法 | post               |
+| 请求地址 | /browse_histories/ |
+
+请求参数json
+
+| 参数名 | 类型   | 是否必传 | 说明          |
+| ------ | ------ | -------- | ------------- |
+| sku_id | string | 是       | 商品的sku编号 |
+
+响应结果json
+
+| 参数名 | 说明     |
+| ------ | -------- |
+| code   | 状态码   |
+| errmsg | 错误信息 |
+
+在用户(users)子模块下新建类UserBrowseHistory
+
+```python
+class UserBrowseHistory(LoginRequiredJSONMixin,View):
+	def post(self, request):
+        # 接收参数
+        jsonStr = request.body.decode()
+        jsonDict = json.loads(JsonStr)
+        skuId = jsonDict.get('sku_id')
+        # 校验参数
+        try:
+            SKU.objects.get(id=sku_id)
+        except SKU.DoesNotExist:
+            return http.HttpResponseForbidden('参数sku_id错误')
+        # 操作
+        redisConn = get_redis_connection('history')
+        #去重
+        pl = redisConn.pipeline()
+        pl.lrem('history_%s' % user.id,0, sku_id)
+        #保存
+        pl.lpush('history_%s' % user.id,sku_id)
+        #截取
+        pl.ltrim('history_%s' % user.id,0,4)
+        pl.execute()
+        # 响应结果
+        return http.JsonResponse({'code':RETCODE.OK,'errmsg':'OK'})
+```
+
+在用户(users)子模块下添加路由,主要为修改users下的urls.py文件,添加如下路由信息
+
+```
+url(r'browse_histories/$', views.UserBrowseHistory.as_view()),
 ```
 
 
