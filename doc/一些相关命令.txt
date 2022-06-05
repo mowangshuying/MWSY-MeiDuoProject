@@ -1,7 +1,0 @@
-python django-admin startproject MeiDuoProject
-python manage.py runserver
-python manage.py startapp users # 创建用户子应用模块
-python manage.py makemigrations # 创建迁移文件
-python manage.py migrate # 执行迁移命令
-python ../../manage.py startapp  contents
-python ../../manage.py startapp verifications
